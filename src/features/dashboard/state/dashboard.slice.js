@@ -4,7 +4,8 @@ import {
   fetchWebsites,
   deleteWebsite as deleteWebsiteApi,
   triggerWebsiteCheck as triggerWebsiteCheckApi,
-  createWebsite as createWebsiteApi
+  createWebsite as createWebsiteApi,
+  updateWebsite as updateWebsiteApi
 } from '../services/website.api';
 import {
   transformDashboardResponse,
@@ -71,6 +72,18 @@ export const createWebsiteThunk = createAsyncThunk(
       return response;
     } catch (error) {
       return rejectWithValue(error?.message || 'Failed to create website');
+    }
+  }
+);
+
+export const updateWebsiteThunk = createAsyncThunk(
+  'dashboard/updateWebsite',
+  async ({ id, url }, { rejectWithValue }) => {
+    try {
+      const response = await updateWebsiteApi(id, { url });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.message || 'Failed to update website');
     }
   }
 );
@@ -180,11 +193,26 @@ const dashboardSlice = createSlice({
         state.isLoading = false;
         state.successMessage = 'Website added successfully';
         state.error = null;
-        // Note: dashboard will be reloaded after this
       })
       .addCase(createWebsiteThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || 'Failed to create website';
+      });
+
+    // Update Website
+    builder
+      .addCase(updateWebsiteThunk.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateWebsiteThunk.fulfilled, (state) => {
+        state.isLoading = false;
+        state.successMessage = 'Website updated successfully';
+        state.error = null;
+      })
+      .addCase(updateWebsiteThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || 'Failed to update website';
       });
   }
 });

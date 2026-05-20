@@ -1,10 +1,9 @@
-import { Globe, MoreHorizontal, RefreshCw, Eye, Trash2 } from 'lucide-react'
+import { Globe, RefreshCw, Eye, Trash2, Edit2 } from 'lucide-react'
 import { getStatusConfig, getResponseTimeColor, getUptimeBadgeColor, formatLastCheckedTime } from '../services/dashboard.service'
 
-const WebsiteTable = ({ websites = [], onView, onCheck, onDelete }) => {
+const WebsiteTable = ({ websites = [], onView, onCheck, onDelete, onEdit }) => {
   const formatTime = (date) => formatLastCheckedTime(date)
 
-  // Show empty state if no websites
   if (!websites || websites.length === 0) {
     return (
       <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-8 text-center">
@@ -47,7 +46,7 @@ const WebsiteTable = ({ websites = [], onView, onCheck, onDelete }) => {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <span className={`relative flex h-2 w-2`}>
+                      <span className="relative flex h-2 w-2">
                         {statusInfo.pulse && (
                           <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusInfo.color}`} />
                         )}
@@ -85,6 +84,13 @@ const WebsiteTable = ({ websites = [], onView, onCheck, onDelete }) => {
                         title="Manual Check"
                       >
                         <RefreshCw className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => onEdit?.(site)}
+                        className="p-1.5 text-zinc-500 hover:text-blue-400 hover:bg-zinc-800 rounded transition-colors"
+                        title="Edit URL"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => onView?.(site.id)}
