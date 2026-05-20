@@ -8,7 +8,7 @@ import Websites from "../features/dashboard/pages/Websites.jsx"
 import Incidents from "../features/dashboard/pages/Incidents.jsx"
 import Analytics from "../features/dashboard/pages/Analytics.jsx"
 import Profile from "../features/dashboard/pages/Profile.jsx"
-import Settings from "../features/dashboard/pages/Settings.jsx"
+import Reviews from "../features/landing/pages/Reviews.jsx"
 import DashboardLayout from "../components/layout/DashboardLayout.jsx"
 import About from "../features/landing/pages/About.jsx"
 import Terms from "../features/landing/pages/Terms.jsx"
@@ -60,10 +60,10 @@ const routes = [
         isPrivate: true
     },
     {
-        path: "/settings",
+        path: "/reviews",
         element: (
-            <DashboardLayout title="Settings">
-                <Settings />
+            <DashboardLayout title="Reviews">
+                <Reviews />
             </DashboardLayout>
         ),
         isPrivate: true

@@ -1,12 +1,12 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Globe, AlertTriangle, BarChart3, Settings, ArrowLeft, Home } from 'lucide-react'
+import { LayoutDashboard, Globe, AlertTriangle, BarChart3, Star, ArrowLeft, Home } from 'lucide-react'
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/websites', label: 'Websites', icon: Globe },
   { path: '/incidents', label: 'Incidents', icon: AlertTriangle },
   { path: '/analytics', label: 'Analytics', icon: BarChart3 },
-  { path: '/settings', label: 'Settings', icon: Settings },
+  { path: '/reviews', label: 'Reviews', icon: Star },
 ]
 
 const Sidebar = ({ className = '', onClose = () => {} }) => {

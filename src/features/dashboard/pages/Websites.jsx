@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { fetchWebsites, deleteWebsite, triggerWebsiteCheck } from '../services/website.api.js'
-import { Plus, RefreshCw, Trash2, ExternalLink, Search, AlertCircle, CheckCircle, Clock, XCircle } from 'lucide-react'
+import { fetchWebsites, deleteWebsite, triggerWebsiteCheck, updateWebsite } from '../services/website.api.js'
+import { Plus, RefreshCw, Trash2, ExternalLink, Search, AlertCircle, CheckCircle, Clock, XCircle, Edit2, X } from 'lucide-react'
 
 export default function Websites() {
   const [websites, setWebsites] = useState([])
@@ -8,6 +8,9 @@ export default function Websites() {
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [actionLoading, setActionLoading] = useState(null)
+  const [editModalOpen, setEditModalOpen] = useState(false)
+  const [editingWebsite, setEditingWebsite] = useState(null)
+  const [editUrl, setEditUrl] = useState('')
 
   useEffect(() => {
     loadWebsites()
@@ -52,6 +55,31 @@ export default function Websites() {
     }
   }
 
+  const handleEditClick = (website) => {
+    setEditingWebsite(website)
+    setEditUrl(website.url)
+    setEditModalOpen(true)
+  }
+
+  const handleEditSave = async () => {
+    if (!editUrl.trim()) {
+      alert('Please enter a valid URL')
+      return
+    }
+
+    try {
+      setActionLoading(editingWebsite._id)
+      await updateWebsite(editingWebsite._id, { url: editUrl })
+      await loadWebsites()
+      setEditModalOpen(false)
+      setEditingWebsite(null)
+    } catch (err) {
+      alert(err.message || 'Failed to update website')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
   const getStatusIcon = (status) => {
     switch (status) {
       case 'UP':
@@ -90,6 +118,94 @@ export default function Websites() {
 
   return (
     <div style={{ padding: '24px' }}>
+      {/* Edit Modal */}
+      {editModalOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 100
+        }}>
+          <div style={{
+            backgroundColor: '#111111',
+            border: '1px solid #1f1f1f',
+            borderRadius: '12px',
+            padding: '24px',
+            width: '100%',
+            maxWidth: '400px'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#f5f5f5' }}>Edit Website</h2>
+              <button onClick={() => setEditModalOpen(false)} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}>
+                <X size={20} />
+              </button>
+            </div>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ fontSize: '12px', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
+                Website URL
+              </label>
+              <input
+                type="url"
+                value={editUrl}
+                onChange={(e) => setEditUrl(e.target.value)}
+                style={{
+                  width: '100%',
+                  height: '44px',
+                  padding: '0 12px',
+                  backgroundColor: '#161616',
+                  border: '1px solid #1f1f1f',
+                  borderRadius: '8px',
+                  color: '#f5f5f5',
+                  fontSize: '14px',
+                  outline: 'none'
+                }}
+                placeholder="https://example.com"
+              />
+            </div>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button
+                onClick={() => setEditModalOpen(false)}
+                style={{
+                  flex: 1,
+                  height: '40px',
+                  backgroundColor: 'transparent',
+                  border: '1px solid #1f1f1f',
+                  borderRadius: '8px',
+                  color: '#888',
+                  fontSize: '14px',
+                  cursor: 'pointer'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleEditSave}
+                disabled={actionLoading === editingWebsite?._id}
+                style={{
+                  flex: 1,
+                  height: '40px',
+                  backgroundColor: '#f5f5f5',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: '#0a0a0a',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: actionLoading === editingWebsite?._id ? 'not-allowed' : 'pointer'
+                }}
+              >
+                {actionLoading === editingWebsite?._id ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
           <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#f5f5f5', marginBottom: '4px' }}>Websites</h1>
@@ -235,6 +351,23 @@ export default function Websites() {
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${actionLoading === website._id ? 'animate-spin' : ''}`} />
                   Check
+                </button>
+                <button
+                  onClick={() => handleEditClick(website)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '36px',
+                    height: '36px',
+                    backgroundColor: '#161616',
+                    border: '1px solid #1f1f1f',
+                    borderRadius: '6px',
+                    color: '#888888',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <Edit2 className="w-3.5 h-3.5" />
                 </button>
                 <a
                   href={website.url}
