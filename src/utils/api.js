@@ -22,17 +22,13 @@ const getApiBaseUrl = () => {
  * - Base URL from environment variables
  * - withCredentials enabled for JWT/session authentication
  * - Proper error handling for failed requests
- * - Cache control headers to prevent browser caching of auth requests
  */
 const api = axios.create({
   baseURL: getApiBaseUrl(),
   withCredentials: true,
-  timeout: 30000, // 30 second timeout
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
-    'Cache-Control': 'no-cache, no-store, must-revalidate',
-    'Pragma': 'no-cache',
-    'Expires': '0',
   },
 })
 

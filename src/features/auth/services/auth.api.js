@@ -66,7 +66,7 @@ export const logout = async () =>{
 }
 
 export const authMe = async () => {
-    const response = await api.get("/api/auth/me")
+    const response = await api.get(`/api/auth/me?t=${Date.now()}`)
     return response.data
 }
 
