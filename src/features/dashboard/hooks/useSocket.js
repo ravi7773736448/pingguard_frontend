@@ -3,6 +3,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import { updateSingleWebsiteStatus } from '../state/dashboard.slice';
 
+/**
+ * Get the Socket.io server URL from environment variables
+ * Falls back to the current origin if not set
+ */
+const getSocketUrl = () => {
+  const apiUrl = import.meta.env.VITE_API_URL
+  
+  if (!apiUrl) {
+    console.warn('⚠️  VITE_API_URL not configured. Using current origin for Socket.io connection.')
+    return window.location.origin
+  }
+  
+  return apiUrl
+}
+
 export const useSocket = (websiteId = null) => {
   const dispatch = useDispatch();
   const socketRef = useRef(null);
@@ -16,8 +31,12 @@ export const useSocket = (websiteId = null) => {
     if (!userId) return;
 
     // Connect to Backend Socket.IO Server with credentials
-    // Note: since cookies hold the JWT session, the browser automatically forwards it.
-    const socket = io('/', {
+    // Uses the deployed backend URL from environment variables
+    const socketUrl = getSocketUrl()
+    
+    console.log(`🔌 [SOCKET] Connecting to ${socketUrl}...`)
+    
+    const socket = io(socketUrl, {
       withCredentials: true,
       autoConnect: false,
       transports: ['websocket', 'polling']
@@ -44,6 +63,10 @@ export const useSocket = (websiteId = null) => {
       console.log('🔌 [SOCKET] Securely disconnected from Socket.IO.');
     });
 
+    socket.on('connect_error', (error) => {
+      console.error('🔌 [SOCKET-ERROR] Connection error:', error.message);
+    });
+
     // Handle real-time user-isolated updates
     socket.on('website-status-changed', (eventData) => {
       console.log('🔌 [SOCKET-EVENT] website-status-changed:', eventData);
@@ -62,6 +85,7 @@ export const useSocket = (websiteId = null) => {
       if (socket) {
         socket.off('connect');
         socket.off('disconnect');
+        socket.off('connect_error');
         socket.off('website-status-changed');
         socket.disconnect();
       }

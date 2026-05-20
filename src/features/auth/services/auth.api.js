@@ -1,16 +1,16 @@
-import axios from 'axios'
+import api from '../../../utils/api'
 
-const authInstance = axios.create({
-    baseURL: "/api/auth",
-    withCredentials: true
-})
+/**
+ * All authentication API calls use the centralized api instance
+ * which handles baseURL, credentials, and error handling automatically
+ */
 
 
 
 
 export const login = async ({email,password}) =>{
     try{
-        const response = await authInstance.post("/login",{email,password})
+        const response = await api.post("/api/auth/login",{email,password})
         return response.data
     }
     catch(error){
@@ -26,13 +26,13 @@ export const login = async ({email,password}) =>{
                 message: "Demo login authorized"
             }
         }
-        throw error.response?.data || { message: error.message || "Login failed" }
+        throw error.response?.data || error.message || "Login failed"
     }   
 }
 
 export const register = async ({username,email,password}) =>{
     try{
-        const response = await authInstance.post("/register",{username,email,password})     
+        const response = await api.post("/api/auth/register",{username,email,password})     
         return response.data
     }       
     catch(error){
@@ -48,42 +48,42 @@ export const register = async ({username,email,password}) =>{
                 message: "Demo registration authorized"
             }
         }
-        throw error.response?.data || { message: error.message || "Registration failed" }
+        throw error.response?.data || error.message || "Registration failed"
     }       
 }
 
 export const logout = async () =>{
     try{
-        const response = await authInstance.post("/logout")     
+        const response = await api.post("/api/auth/logout")     
         return response.data
     }   
     catch(error){       
         if (!error.response) {
             return { message: "Demo logout successful" }
         }
-        throw error.response?.data || { message: error.message || "Logout failed" }
+        throw error.response?.data || error.message || "Logout failed"
     }       
 }
 
 export const authMe = async () => {
-    const response = await authInstance.get("/me")
+    const response = await api.get("/api/auth/me")
     return response.data
 }
 
 export const forgotPassword = async (email) => {
     try {
-        const response = await authInstance.post("/forgot-password", { email })
+        const response = await api.post("/api/auth/forgot-password", { email })
         return response.data
     } catch (error) {
-        throw error.response?.data || { message: error.message || "Failed to send reset link" }
+        throw error.response?.data || error.message || "Failed to send reset link"
     }
 }
 
 export const resetPassword = async (token, email, newPassword) => {
     try {
-        const response = await authInstance.post("/reset-password", { token, email, newPassword })
+        const response = await api.post("/api/auth/reset-password", { token, email, newPassword })
         return response.data
     } catch (error) {
-        throw error.response?.data || { message: error.message || "Failed to reset password" }
+        throw error.response?.data || error.message || "Failed to reset password"
     }
 }

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import useWindowWidth from './useWindowWidth.js'
-import axios from 'axios'
+import api from '../../../utils/api.js'
 
 export default function Hero() {
   const navigate = useNavigate()
@@ -19,10 +19,10 @@ export default function Hero() {
     }
     setError('')
     try {
-      await axios.post("/api/website", { url }, { withCredentials: true })
+      await api.post("/api/website", { url })
       
     } catch (err) {
-      setError(err?.response?.data?.message || 'Failed to add website')
+      setError(err?.data?.message || err?.message || 'Failed to add website')
     }
   }
 

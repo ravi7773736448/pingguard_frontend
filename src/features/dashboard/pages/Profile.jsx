@@ -2,12 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { User, Lock, Camera, Save, Eye, EyeOff, CheckCircle, XCircle, Mail, Upload, X, Image, Loader2 } from 'lucide-react'
 import { setUser } from '../../auth/state/auth.slice.js'
-import axios from 'axios'
-
-const authInstance = axios.create({
-  baseURL: "/api/auth",
-  withCredentials: true
-})
+import api from '../../../utils/api.js'
 
 const getAvatarUrl = (avatar) => {
     if (!avatar) return null
@@ -135,7 +130,7 @@ export default function Profile() {
       const formData = new FormData()
       formData.append('avatar', file)
 
-      const response = await authInstance.post('/upload-avatar', formData, {
+      const response = await api.post('/api/auth/upload-avatar', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -163,7 +158,7 @@ export default function Profile() {
     setMessage({ type: '', text: '' })
 
     try {
-      const response = await authInstance.put('/profile', {
+      const response = await api.put('/api/auth/profile', {
         username: profileData.username,
         email: profileData.email,
         avatar: profileData.avatar
@@ -194,7 +189,7 @@ export default function Profile() {
     setMessage({ type: '', text: '' })
 
     try {
-      await authInstance.put('/change-password', {
+      await api.put('/api/auth/change-password', {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword
       })

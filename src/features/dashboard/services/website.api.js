@@ -1,20 +1,20 @@
-import axios from 'axios'
+import api from '../../../utils/api'
 
-const websiteInstance = axios.create({
-    baseURL: "/api/website",
-    withCredentials: true
-})
+/**
+ * All website API calls use the centralized api instance
+ * which handles baseURL, credentials, and error handling automatically
+ */
 
 /**
  * Fetch dashboard summary with status counts and recent websites
  */
 export const fetchDashboardSummary = async () => {
     try {
-        const response = await websiteInstance.get("/dashboard/summary")
+        const response = await api.get("/api/website/dashboard/summary")
         return response.data
     } catch (error) {
         console.error("Failed to fetch dashboard summary:", error.message)
-        throw error.response?.data || { message: error.message || "Failed to fetch dashboard summary" }
+        throw error.response?.data || error.message || "Failed to fetch dashboard summary"
     }
 }
 
@@ -23,11 +23,11 @@ export const fetchDashboardSummary = async () => {
  */
 export const fetchWebsites = async () => {
     try {
-        const response = await websiteInstance.get("/")
+        const response = await api.get("/api/website/")
         return response.data
     } catch (error) {
         console.error("Failed to fetch websites:", error.message)
-        throw error.response?.data || { message: error.message || "Failed to fetch websites" }
+        throw error.response?.data || error.message || "Failed to fetch websites"
     }
 }
 
@@ -36,11 +36,11 @@ export const fetchWebsites = async () => {
  */
 export const fetchWebsiteById = async (id) => {
     try {
-        const response = await websiteInstance.get(`/${id}`)
+        const response = await api.get(`/api/website/${id}`)
         return response.data
     } catch (error) {
         console.error("Failed to fetch website:", error.message)
-        throw error.response?.data || { message: error.message || "Failed to fetch website" }
+        throw error.response?.data || error.message || "Failed to fetch website"
     }
 }
 
@@ -49,7 +49,7 @@ export const fetchWebsiteById = async (id) => {
  */
 export const createWebsite = async ({ url }) => {
     try {
-        const response = await websiteInstance.post("/", { url })
+        const response = await api.post("/api/website/", { url })
         return response.data
     }
     catch (error) {
@@ -64,7 +64,7 @@ export const createWebsite = async ({ url }) => {
                 }
             }
         }
-        throw error.response?.data || { message: error.message || "Failed to create website" }
+        throw error.response?.data || error.message || "Failed to create website"
     }
 }
 
@@ -73,11 +73,11 @@ export const createWebsite = async ({ url }) => {
  */
 export const updateWebsite = async (id, updates) => {
     try {
-        const response = await websiteInstance.put(`/${id}`, updates)
+        const response = await api.put(`/api/website/${id}`, updates)
         return response.data
     } catch (error) {
         console.error("Failed to update website:", error.message)
-        throw error.response?.data || { message: error.message || "Failed to update website" }
+        throw error.response?.data || error.message || "Failed to update website"
     }
 }
 
@@ -86,11 +86,11 @@ export const updateWebsite = async (id, updates) => {
  */
 export const deleteWebsite = async (id) => {
     try {
-        const response = await websiteInstance.delete(`/${id}`)
+        const response = await api.delete(`/api/website/${id}`)
         return response.data
     } catch (error) {
         console.error("Failed to delete website:", error.message)
-        throw error.response?.data || { message: error.message || "Failed to delete website" }
+        throw error.response?.data || error.message || "Failed to delete website"
     }
 }
 
@@ -99,11 +99,11 @@ export const deleteWebsite = async (id) => {
  */
 export const triggerWebsiteCheck = async (id) => {
     try {
-        const response = await websiteInstance.post(`/${id}/check`)
+        const response = await api.post(`/api/website/${id}/check`)
         return response.data
     } catch (error) {
         console.error("Failed to trigger check:", error.message)
-        throw error.response?.data || { message: error.message || "Failed to trigger check" }
+        throw error.response?.data || error.message || "Failed to trigger check"
     }
 }
 
@@ -112,11 +112,11 @@ export const triggerWebsiteCheck = async (id) => {
  */
 export const fetchAllIncidents = async (limit = 10) => {
     try {
-        const response = await websiteInstance.get(`/incidents/all?limit=${limit}`)
+        const response = await api.get(`/api/website/incidents/all?limit=${limit}`)
         return response.data
     } catch (error) {
         console.error("Failed to fetch incidents:", error.message)
-        throw error.response?.data || { message: error.message || "Failed to fetch incidents" }
+        throw error.response?.data || error.message || "Failed to fetch incidents"
     }
 }
 
@@ -125,11 +125,11 @@ export const fetchAllIncidents = async (limit = 10) => {
  */
 export const fetchWebsiteAnalytics = async (id, period = 24) => {
     try {
-        const response = await websiteInstance.get(`/${id}/analytics?period=${period}`)
+        const response = await api.get(`/api/website/${id}/analytics?period=${period}`)
         return response.data
     } catch (error) {
         console.error("Failed to fetch analytics:", error.message)
-        throw error.response?.data || { message: error.message || "Failed to fetch analytics" }
+        throw error.response?.data || error.message || "Failed to fetch analytics"
     }
 }
 
@@ -138,10 +138,10 @@ export const fetchWebsiteAnalytics = async (id, period = 24) => {
  */
 export const fetchWebsiteIncidents = async (id, days = 30) => {
     try {
-        const response = await websiteInstance.get(`/${id}/incidents?days=${days}`)
+        const response = await api.get(`/api/website/${id}/incidents?days=${days}`)
         return response.data
     } catch (error) {
         console.error("Failed to fetch incidents:", error.message)
-        throw error.response?.data || { message: error.message || "Failed to fetch incidents" }
+        throw error.response?.data || error.message || "Failed to fetch incidents"
     }
 }
