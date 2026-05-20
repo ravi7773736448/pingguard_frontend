@@ -37,7 +37,7 @@ const api = axios.create({
  */
 api.interceptors.request.use(
   (config) => {
-    // Add any additional headers or token refresh logic here
+    console.log(`📤 API Request: ${config.method?.toUpperCase()} ${config.url}`, { withCredentials: config.withCredentials })
     return config
   },
   (error) => {
@@ -51,7 +51,7 @@ api.interceptors.request.use(
  */
 api.interceptors.response.use(
   (response) => {
-    // Return successful response
+    console.log(`📥 API Response: ${response.status} ${response.config?.url}`, { data: response.data })
     return response
   },
   (error) => {

@@ -9,14 +9,13 @@ const App = () => {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    // Check session with backend on app load (uses HTTP-only cookie)
     const checkSession = async () => {
       try {
         dispatch(setLoading(true))
         const data = await authMe()
         dispatch(setUser(data.user))
       } catch (err) {
-        // No active session or token expired
+        console.error('[Auth] Session check failed:', err?.message || err)
         dispatch(setUser(null))
       } finally {
         dispatch(setLoading(false))
