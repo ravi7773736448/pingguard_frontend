@@ -9,6 +9,17 @@ const App = () => {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
+    // Check for token in URL (from Google OAuth redirect)
+    const urlParams = new URLSearchParams(window.location.search)
+    const tokenFromUrl = urlParams.get('token')
+    
+    if (tokenFromUrl) {
+      console.log('[Auth] Token found in URL, storing in localStorage')
+      localStorage.setItem('authToken', tokenFromUrl)
+      // Clean up URL
+      window.history.replaceState({}, document.title, '/dashboard')
+    }
+
     const checkSession = async () => {
       try {
         dispatch(setLoading(true))

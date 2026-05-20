@@ -39,8 +39,8 @@ export default function Navbar() {
     } catch (err) {
       console.error('Logout error:', err)
     } finally {
-      // Clear Redux state (HTTP-only cookie is cleared by backend)
       dispatch(setUser(null))
+      localStorage.removeItem('authToken')
       navigate('/')
     }
   }

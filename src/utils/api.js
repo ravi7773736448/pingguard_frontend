@@ -37,7 +37,12 @@ const api = axios.create({
  */
 api.interceptors.request.use(
   (config) => {
-    console.log(`📤 API Request: ${config.method?.toUpperCase()} ${config.url}`, { withCredentials: config.withCredentials })
+    // Add token from localStorage if available
+    const token = localStorage.getItem('authToken')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    console.log(`📤 API Request: ${config.method?.toUpperCase()} ${config.url}`, { hasToken: !!token })
     return config
   },
   (error) => {

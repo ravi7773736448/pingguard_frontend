@@ -31,8 +31,8 @@ const TopNavbar = ({ title = 'Dashboard', isMobile = false, sidebarOpen = false,
     } catch {
       // Continue with logout even if API call fails
     }
-    // Clear Redux state (HTTP-only cookie is cleared by backend)
     dispatch(setUser(null))
+    localStorage.removeItem('authToken')
     setShowUserMenu(false)
     navigate('/login')
   }
