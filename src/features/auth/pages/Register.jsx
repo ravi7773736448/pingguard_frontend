@@ -124,7 +124,7 @@ export default function Register({ formData, errors, loading, onFieldChange, onS
 
           <button
             type="button"
-            onClick={() => window.location.href="/api/auth/google"}
+            onClick={() => window.location.href ="https://pingguard-backend.onrender.com/api/auth/google"}
             style={{
               height: '46px',
               width: '100%',
