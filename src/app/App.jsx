@@ -9,22 +9,28 @@ const App = () => {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    // Check for token in URL (from Google OAuth redirect)
+    // 1. First, check for token in URL (from Google OAuth redirect)
     const urlParams = new URLSearchParams(window.location.search)
     const tokenFromUrl = urlParams.get('token')
     
     if (tokenFromUrl) {
       console.log('[Auth] Token found in URL, storing in localStorage')
       localStorage.setItem('authToken', tokenFromUrl)
-      // Clean up URL
-      window.history.replaceState({}, document.title, '/dashboard')
+      // Clean up URL immediately
+      window.history.replaceState({}, document.title, window.location.pathname)
     }
 
+    // 2. Check if there's already a token in localStorage
+    const storedToken = localStorage.getItem('authToken')
+    console.log('[Auth] Token in localStorage:', storedToken ? 'YES' : 'NO')
+
+    // 3. Check session with backend
     const checkSession = async () => {
       try {
         dispatch(setLoading(true))
         const data = await authMe()
         dispatch(setUser(data.user))
+        console.log('[Auth] User loaded:', data.user?.email)
       } catch (err) {
         console.error('[Auth] Session check failed:', err?.message || err)
         dispatch(setUser(null))
