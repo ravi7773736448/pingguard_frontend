@@ -13,6 +13,7 @@ const Sidebar = ({ className = '', onClose = () => {} }) => {
   const navigate = useNavigate()
 
   const handleBackToHome = () => {
+    onClose()
     navigate('/')
   }
   return (

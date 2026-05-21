@@ -29,8 +29,8 @@ const DashboardLayout = ({ title = 'Dashboard', children }) => {
           onClick={() => setSidebarOpen(false)}
         />
 
-        <div className={`fixed left-0 top-0 h-full w-64 bg-zinc-950 border-r border-zinc-800 transform transition-transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-          <Sidebar className="w-64" onClose={() => setSidebarOpen(false)} />
+        <div className={`fixed left-0 top-0 h-full w-64 bg-zinc-950 border-r border-zinc-800 z-10 transform transition-transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+          <Sidebar className="relative h-full w-64" onClose={() => setSidebarOpen(false)} />
         </div>
       </div>
 
