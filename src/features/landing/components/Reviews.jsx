@@ -16,28 +16,6 @@ export default function Reviews() {
         const liveReviews = await getPublicReviews()
         if (liveReviews && liveReviews.length > 0) {
           setReviews(liveReviews)
-        } else {
-          // Fallback dummy reviews if none exist in DB yet
-          setReviews([
-            {
-              name: 'Sarah Jenkins',
-              role: 'CTO at TechFlow',
-              content: 'PingGuard completely transformed how we monitor our microservices. The real-time WebSocket alerts have saved us from extended downtime multiple times.',
-              rating: 5
-            },
-            {
-              name: 'David Chen',
-              role: 'Lead Developer',
-              content: 'The clarity of the dashboard is unmatched. I can see the exact response time of every API endpoint at a glance without having to dig through messy logs.',
-              rating: 5
-            },
-            {
-              name: 'Elena Rodriguez',
-              role: 'DevOps Engineer',
-              content: 'Setup took less than 5 minutes. The UI is incredibly sleek, and the fact that we can monitor both standard websites and authenticated APIs is a game changer.',
-              rating: 5
-            }
-          ])
         }
       } catch (error) {
         console.error('Failed to fetch reviews', error)
@@ -48,7 +26,7 @@ export default function Reviews() {
     fetchReviews()
   }, [])
 
-  if (loading) return null
+  if (loading || reviews.length === 0) return null
 
   return (
     <section id="reviews" ref={ref} style={{ padding: isMobile ? '80px 16px' : '120px 24px', opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(24px)', transition: 'all 0.7s ease' }}>
