@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { LayoutDashboard, Globe, AlertTriangle, BarChart3, Star, ArrowLeft, Home } from 'lucide-react'
 
 const navItems = [
@@ -7,15 +7,10 @@ const navItems = [
   { path: '/incidents', label: 'Incidents', icon: AlertTriangle },
   { path: '/analytics', label: 'Analytics', icon: BarChart3 },
   { path: '/reviews', label: 'Reviews', icon: Star },
+  { path: '/', label: 'Back to Home', icon: Home },
 ]
 
 const Sidebar = ({ className = '', onClose = () => {} }) => {
-  const navigate = useNavigate()
-
-  const handleBackToHome = () => {
-    onClose()
-    navigate('/')
-  }
   return (
     <aside className={`fixed left-0 top-0 h-screen w-56 bg-zinc-950 border-r border-zinc-800 flex flex-col z-50 ${className}`}>
       <div className="h-14 flex items-center px-3 border-b border-zinc-800 justify-between">
@@ -64,14 +59,7 @@ const Sidebar = ({ className = '', onClose = () => {} }) => {
         </ul>
       </nav>
 
-      <div className="p-4 border-t border-zinc-800 space-y-3">
-        <button
-          onClick={handleBackToHome}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 transition-colors text-left"
-        >
-          <Home className="w-4 h-4" />
-          Back to Home
-        </button>
+      <div className="p-4 border-t border-zinc-800">
         <div className="text-xs text-zinc-500 text-center font-medium pt-2 tracking-wide">
           PingGuard v1.0
         </div>
